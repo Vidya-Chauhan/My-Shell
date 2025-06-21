@@ -23,7 +23,21 @@ public class Main {
                 if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type")){
                     System.out.println(cmd + " is a shell builtin");
                 } else {
-                    System.out.println(cmd + ": not found");
+                    String pathENV = System.getenv("PATH");
+                    String[] pathDirs = pathENV.split(":");
+
+                    boolean found = false ;
+                    for(String dir : pathDirs){
+                        java.io.File file = new java.io.File(dir , cmd);
+                        if(file.exists() && file.canExecute()){
+                            System.out.println(cmd + " is "+file.getAbsolutePath());
+                            found = true;
+                             break;
+                        }
+                    }
+                    if(!found){
+                        System.out.println(cmd+": not found");
+                    }
                 }
             } else {
                 System.out.println("Usage: type <command>");
