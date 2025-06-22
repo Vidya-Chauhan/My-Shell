@@ -10,44 +10,10 @@ public class Main {
             String input = scanner.nextLine();
                    
             
-            if (input.equals("exit 0")) {
-                System.exit(0); 
-            }
-            else if(input.startsWith("echo ")){
-            System.out.println(input.substring(5));
-        }
-            else if(input.startsWith("type ")){
-            String[] parts = input.split("\\s+");
-            if(parts.length == 2){
-                String cmd = parts[1];
-                if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type")){
-                    System.out.println(cmd + " is a shell builtin");
-                } else {
-                    String pathENV = System.getenv("PATH");
-                    String[] pathDirs = pathENV.split(":");
-
-                    boolean found = false ;
-                    for(String dir : pathDirs){
-                        java.io.File file = new java.io.File(dir , cmd);
-                        if(file.exists() && file.canExecute()){
-                            System.out.println(cmd + " is "+file.getAbsolutePath());
-                            found = true;
-                             break;
-                        }
-                    }
-                    if(!found){
-                        System.out.println(cmd+": not found");
-                    }
-                }
-            } else {
-                System.out.println("Usage: type <command>");
-            }
-        }
-        else {
-            System.out.println(input + ": command not found");
-        }
+           if(Builtins.handleBuiltin(input)){
+            continue;
+           }
+           Executor.runExternal(input);
         }
     }
-   
 }
-
