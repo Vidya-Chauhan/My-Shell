@@ -19,7 +19,7 @@ public class Executor {
         } else {
             try {
                 List<String> commandWithArgs = new ArrayList<>();
-                commandWithArgs.add(fullPath);
+                commandWithArgs.add(cmd);
                 for(int i=1;i<parts.length;i++){
                   commandWithArgs.add(parts[i]);
                 }
