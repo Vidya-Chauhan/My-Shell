@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.*;
 
 public class Executor {
-    public static void runExternal(String input){
+    public static void runExternal(String input) {
         String[] parts = input.trim().split("\\s+");
         if (parts.length == 0 || parts[0].isEmpty()) {
             System.out.println(": command not found");
@@ -21,17 +21,20 @@ public class Executor {
         }
 
         if (fullPath == null) {
-            System.out.println(cmd + ": command not found");  // ✅ Fix 1
+            System.out.println(cmd + ": command not found");
         } else {
             try {
                 List<String> commandWithArgs = new ArrayList<>();
-                commandWithArgs.add(fullPath);  // ✅ Fix 2
+                commandWithArgs.add(cmd); // ✅ Use only the name here
                 for (int i = 1; i < parts.length; i++) {
                     commandWithArgs.add(parts[i]);
                 }
 
                 ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
+                pb.directory(new File(fullPath).getParentFile()); // Optional
+                pb.environment().put("PATH", System.getenv("PATH"));
                 pb.inheritIO();
+                pb.command().set(0, fullPath); // ✅ Use full path to locate, but keep Arg#0 as cmd
                 Process process = pb.start();
                 process.waitFor();
             } catch (Exception e) {
