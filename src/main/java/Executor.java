@@ -12,7 +12,6 @@ public class Executor {
         String cmd = parts[0];
         String fullPath = null;
 
-        // Search PATH for full path
         for (String dir : System.getenv("PATH").split(":")) {
             File file = new File(dir, cmd);
             if (file.exists() && file.canExecute()) {
@@ -27,21 +26,19 @@ public class Executor {
         }
 
         try {
-            // Prepare args list with `cmd` as Arg#0 (not fullPath)
-            List<String> args = new ArrayList<>();
-            args.add(fullPath); // This is used for launching
+            // 👇 key change: set fullPath for launching, but keep cmd as Arg[0]
+            List<String> commandWithArgs = new ArrayList<>();
+            commandWithArgs.add(fullPath); // used to launch
             for (int i = 1; i < parts.length; i++) {
-                args.add(parts[i]);
+                commandWithArgs.add(parts[i]);
             }
 
-            // Launch process with full path but preserve Arg#0 as just the name
-            ProcessBuilder pb = new ProcessBuilder(args);
+            // 👇 Create ProcessBuilder with full path, but override Arg[0] to just cmd
+            ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
+            pb.command().set(0, cmd); // This tricks argv[0] into being just "custom_exe_xxx"
             pb.inheritIO();
-            Map<String, String> env = pb.environment();
-            env.put("PATH", System.getenv("PATH")); // Keep env safe
+            pb.start().waitFor();
 
-            Process process = pb.start();
-            process.waitFor();
         } catch (Exception e) {
             System.out.println("Error running command: " + e.getMessage());
         }
