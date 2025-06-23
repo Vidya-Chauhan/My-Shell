@@ -10,6 +10,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        new File("/tmp/apple").mkdirs(); 
         Scanner scanner = new Scanner(System.in);
 
         printPrompt(); // ✅ Initial prompt before anything
