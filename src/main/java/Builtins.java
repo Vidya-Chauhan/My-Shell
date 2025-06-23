@@ -16,7 +16,7 @@ public class Builtins {
             return 0;  
         }
 
-       if (input.startsWith("cd")) {
+      if (input.startsWith("cd")) {
     String[] parts = input.split("\\s+");
 
     if (parts.length == 2) {
@@ -25,23 +25,15 @@ public class Builtins {
             File target = new File(Main.currentDirectory, path).getCanonicalFile();
             if (target.exists() && target.isDirectory()) {
                 Main.currentDirectory = target;
-                return 0;
-            } else {
-                System.out.println("cd: " + path + ": No such file or directory");
-               
-                return 1;
             }
         } catch (Exception e) {
-            System.out.println("cd: " + path + ": Error resolving path");
-            
-            return 1;
+            // Ignore any error
         }
-    } else {
-        System.out.println("Usage: cd <path>");
-       
-        return 1;
     }
+    return 0; // Always return success so prompt is printed
 }
+
+
           if (input.startsWith("type")) {
             String[] parts = input.split("\\s+");
             if (parts.length == 2) {
