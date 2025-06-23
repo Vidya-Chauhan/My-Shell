@@ -25,23 +25,26 @@ public class Builtins {
                     File target = new File(Main.currentDirectory, path).getCanonicalFile();
                     if (target.exists() && target.isDirectory()) {
                         Main.currentDirectory = target;
-                        return 0; // success, prompt by Main
+                        return 0; // success, prompt will be printed by Main
                     } else {
-                        System.out.print("cd: " + path + ": No such file or directory\n");
+                        System.out.println("cd: " + path + ": No such file or directory");
                         System.out.flush();
-                        Main.printPrompt(); // we already printed prompt
+                        System.out.print("$ ");  // manually print prompt
+                        System.out.flush();
                         return 1;
                     }
                 } catch (Exception e) {
-                    System.out.print("cd: " + path + ": Error resolving path\n");
+                    System.out.println("cd: " + path + ": Error resolving path");
                     System.out.flush();
-                    Main.printPrompt();
+                    System.out.print("$ ");  // manually print prompt
+                    System.out.flush();
                     return 1;
                 }
             } else {
-                System.out.print("Usage: cd <path>\n");
+                System.out.println("Usage: cd <path>");
                 System.out.flush();
-                Main.printPrompt();
+                System.out.print("$ ");  // manually print prompt
+                System.out.flush();
                 return 1;
             }
         }

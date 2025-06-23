@@ -10,7 +10,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        new File("/tmp/apple").mkdirs(); 
+        new File("/tmp/apple/local/bin").mkdirs();  // optional test prep
+
         Scanner scanner = new Scanner(System.in);
 
         printPrompt(); // ✅ Initial prompt before anything
