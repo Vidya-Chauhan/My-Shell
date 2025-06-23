@@ -43,9 +43,7 @@ if (input.startsWith("cd")) {
     }
     return 0;
 }
-
-
-          if (input.startsWith("type")) {
+         if (input.startsWith("type")) {
             String[] parts = input.split("\\s+");
             if (parts.length == 2) {
                 String cmd = parts[1];
@@ -68,6 +66,6 @@ if (input.startsWith("cd")) {
             return 0;
         }
 
-        return -1; // not a builtin
+        return -1; 
     }
 }

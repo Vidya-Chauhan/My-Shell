@@ -34,7 +34,7 @@ public class Executor {
 
     ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
     pb.command().set(0, cmd); // display original name
-    pb.directory(Main.currentDirectory); // ✅ This is the fix!
+    pb.directory(Main.currentDirectory); 
     pb.inheritIO();
 
     pb.start().waitFor();
