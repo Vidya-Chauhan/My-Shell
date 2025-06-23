@@ -10,6 +10,10 @@ public class Builtins {
             System.out.println(input.substring(5));
             return true;
         }
+        if(input.startsWith("pwd")){
+            System.out.println((System.getProperty("user.dir")));
+            return true;
+        }
         if(input.startsWith("type")){
             String[] parts = input.split("\\s+");
             if(parts.length ==2){

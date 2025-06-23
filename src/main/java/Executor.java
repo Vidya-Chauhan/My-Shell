@@ -26,16 +26,14 @@ public class Executor {
         }
 
         try {
-            // 👇 key change: set fullPath for launching, but keep cmd as Arg[0]
+          
             List<String> commandWithArgs = new ArrayList<>();
-            commandWithArgs.add(fullPath); // used to launch
+            commandWithArgs.add(fullPath);
             for (int i = 1; i < parts.length; i++) {
                 commandWithArgs.add(parts[i]);
-            }
-
-            // 👇 Create ProcessBuilder with full path, but override Arg[0] to just cmd
+            }         
             ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
-            pb.command().set(0, cmd); // This tricks argv[0] into being just "custom_exe_xxx"
+            pb.command().set(0, cmd); 
             pb.inheritIO();
             pb.start().waitFor();
 
