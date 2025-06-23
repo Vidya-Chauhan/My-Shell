@@ -22,7 +22,10 @@ if (input.startsWith("cd")) {
     if (parts.length == 2) {
         String path = parts[1];
         try {
-            File target = new File(Main.currentDirectory, path).getCanonicalFile();
+           File target = path.startsWith("/") ?
+    new File(path).getCanonicalFile() :
+    new File(Main.currentDirectory, path).getCanonicalFile();
+
             if (target.exists() && target.isDirectory()) {
                 Main.currentDirectory = target;
             }
