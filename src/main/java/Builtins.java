@@ -11,14 +11,36 @@ public class Builtins {
             return true;
         }
         if(input.startsWith("pwd")){
-            System.out.println((System.getProperty("user.dir")));
+            System.out.println(Main.currentDirectory.getAbsolutePath());
             return true;
+        }
+        if(input.startsWith("cd")){
+           String[] parts = input.split("\\s+");
+           if(parts.length ==2){
+            String path = parts[1];
+            File target = new File(path);
+
+            if(!target.isAbsolute()){
+                System.out.println("Only absolute paths are supported");
+                return true;
+            }
+            else if(target.exists() && target.isDirectory()){
+                Main.currentDirectory = target;
+            } else {
+                System.out.println("cd: no such file or directory: "+ path);
+            }
+        } 
+            else {
+                System.out.println("Usage: cd /absolute/path");
+            }
+            return true;
+           
         }
         if(input.startsWith("type")){
             String[] parts = input.split("\\s+");
             if(parts.length ==2){
                 String cmd = parts[1];
-                if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type") || cmd.equals("pwd")){
+                if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd")){
                     System.out.println(cmd +" is a shell builtin");
                 } else {
                     String[] pathDirs = System.getenv("PATH").split(":");
