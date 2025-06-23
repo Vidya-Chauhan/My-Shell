@@ -23,8 +23,7 @@ public class Builtins {
             if(target.exists() && target.isDirectory()){
                 Main.currentDirectory = target;
             } else {
-                System.out.println("cd: no such file or directory: "+ path);
-                System.out.flush();  
+                 System.out.println("cd: no such file or directory: " + path);
             }
         } catch(Exception e){
             System.out.println("cd: error resolving path: "+path);

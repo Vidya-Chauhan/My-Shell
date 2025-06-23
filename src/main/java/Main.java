@@ -12,10 +12,11 @@ public class Main {
                    
             
            if(Builtins.handleBuiltin(input)){
+               Executor.runExternal(input);
+
             
-            continue;
            }
-           Executor.runExternal(input);
+           System.out.flush();
         }
     }
 }
