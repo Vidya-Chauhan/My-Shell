@@ -1,7 +1,8 @@
 import java.io.File;
+import java.io.IOException;
 
 public class Builtins {
-    public static int handleBuiltin(String input) {
+    public static int handleBuiltin(String input) throws IOException {
         if (input.equals("exit 0")) {
             System.exit(0);
         }
@@ -12,7 +13,7 @@ public class Builtins {
         }
 
         if (input.startsWith("pwd")) {
-            System.out.println(Main.currentDirectory.getAbsolutePath());
+            System.out.println(Main.currentDirectory.getCanonicalPath());
             return 0;  
         }
 if (input.startsWith("cd")) {

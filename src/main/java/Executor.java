@@ -25,20 +25,23 @@ public class Executor {
             return;
         }
 
-        try {
-          
-            List<String> commandWithArgs = new ArrayList<>();
-            commandWithArgs.add(fullPath);
-            for (int i = 1; i < parts.length; i++) {
-                commandWithArgs.add(parts[i]);
-            }         
-            ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
-            pb.command().set(0, cmd); 
-            pb.inheritIO();
-            pb.start().waitFor();
+      try {
+    List<String> commandWithArgs = new ArrayList<>();
+    commandWithArgs.add(fullPath);
+    for (int i = 1; i < parts.length; i++) {
+        commandWithArgs.add(parts[i]);
+    }
 
-        } catch (Exception e) {
-            System.out.println("Error running command: " + e.getMessage());
-        }
+    ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
+    pb.command().set(0, cmd); // display original name
+    pb.directory(Main.currentDirectory); // ✅ This is the fix!
+    pb.inheritIO();
+
+    pb.start().waitFor();
+
+} catch (Exception e) {
+    System.out.println("Error running command: " + e.getMessage());
+}
+
     }
 }
