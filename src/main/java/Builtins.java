@@ -8,48 +8,38 @@ public class Builtins {
 
         if (input.startsWith("echo")) {
             System.out.println(input.substring(5));
-            return 0;  // prompt will be printed by Main
+            return 0; 
         }
 
         if (input.startsWith("pwd")) {
             System.out.println(Main.currentDirectory.getAbsolutePath());
-            return 0;  // prompt will be printed by Main
+            return 0;  
         }
 
-        if (input.startsWith("cd")) {
-            String[] parts = input.split("\\s+");
+       if (input.startsWith("cd")) {
+    String[] parts = input.split("\\s+");
 
-            if (parts.length == 2) {
-                String path = parts[1];
-                try {
-                    File target = new File(Main.currentDirectory, path).getCanonicalFile();
-                    if (target.exists() && target.isDirectory()) {
-                        Main.currentDirectory = target;
-                        return 0; // success, prompt will be printed by Main
-                    } else {
-                        System.out.println("cd: " + path + ": No such file or directory");
-                        
-                        System.out.print("$ ");  // manually print prompt
-                        
-                        return 1;
-                    }
-                } catch (Exception e) {
-                    System.out.println("cd: " + path + ": Error resolving path");
-                    
-                    System.out.print("$ ");  // manually print prompt
-                  
-                    return 1;
-                }
+    if (parts.length == 2) {
+        String path = parts[1];
+        try {
+            File target = new File(Main.currentDirectory, path).getCanonicalFile();
+            if (target.exists() && target.isDirectory()) {
+                Main.currentDirectory = target;
+                return 0;
             } else {
-                System.out.println("Usage: cd <path>");
-            
-                System.out.print("$ ");  // manually print prompt
-                
+                System.out.println("cd: " + path + ": No such file or directory");
                 return 1;
             }
+        } catch (Exception e) {
+            System.out.println("cd: " + path + ": Error resolving path");
+            return 1;
         }
-
-        if (input.startsWith("type")) {
+    } else {
+        System.out.println("Usage: cd <path>");
+        return 1;
+    }
+}
+          if (input.startsWith("type")) {
             String[] parts = input.split("\\s+");
             if (parts.length == 2) {
                 String cmd = parts[1];

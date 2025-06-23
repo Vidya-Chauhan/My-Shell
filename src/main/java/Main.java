@@ -6,15 +6,15 @@ public class Main {
 
     public static void printPrompt() {
         System.out.print("$ ");
-        System.out.flush();  // ✅ Force it out instantly
+      
     }
 
     public static void main(String[] args) throws Exception {
-        new File("/tmp/apple/local/bin").mkdirs();  // optional test prep
+        new File("/tmp/apple/local/bin").mkdirs(); 
 
         Scanner scanner = new Scanner(System.in);
 
-        printPrompt(); // ✅ Initial prompt before anything
+        printPrompt(); 
 
         while (true) {
             String input = scanner.nextLine();
@@ -23,11 +23,11 @@ public class Main {
 
             if (result == -1) {
                 Executor.runExternal(input);
-                printPrompt(); // after external
+                printPrompt(); 
             } else if (result == 0) {
-                printPrompt(); // after builtin
+                printPrompt();
             }
-            // if result == 1, prompt was already printed manually (e.g. after error)
+            
         }
     }
 }
