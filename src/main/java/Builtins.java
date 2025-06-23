@@ -28,23 +28,23 @@ public class Builtins {
                         return 0; // success, prompt will be printed by Main
                     } else {
                         System.out.println("cd: " + path + ": No such file or directory");
-                        System.out.flush();
+                        
                         System.out.print("$ ");  // manually print prompt
-                        System.out.flush();
+                        
                         return 1;
                     }
                 } catch (Exception e) {
                     System.out.println("cd: " + path + ": Error resolving path");
-                    System.out.flush();
+                    
                     System.out.print("$ ");  // manually print prompt
-                    System.out.flush();
+                  
                     return 1;
                 }
             } else {
                 System.out.println("Usage: cd <path>");
-                System.out.flush();
+            
                 System.out.print("$ ");  // manually print prompt
-                System.out.flush();
+                
                 return 1;
             }
         }
