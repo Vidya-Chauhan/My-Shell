@@ -28,14 +28,17 @@ public class Builtins {
                 return 0;
             } else {
                 System.out.println("cd: " + path + ": No such file or directory");
+               
                 return 1;
             }
         } catch (Exception e) {
             System.out.println("cd: " + path + ": Error resolving path");
+            
             return 1;
         }
     } else {
         System.out.println("Usage: cd <path>");
+       
         return 1;
     }
 }

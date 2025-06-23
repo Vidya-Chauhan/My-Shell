@@ -6,28 +6,29 @@ public class Main {
 
     public static void printPrompt() {
         System.out.print("$ ");
+        System.out.flush();
       
     }
 
     public static void main(String[] args) throws Exception {
         new File("/tmp/apple/local/bin").mkdirs(); 
 
-        Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
+            printPrompt(); 
 
-        printPrompt(); 
+            while (true) {
+                String input = scanner.nextLine();
 
-        while (true) {
-            String input = scanner.nextLine();
+                int result = Builtins.handleBuiltin(input);
 
-            int result = Builtins.handleBuiltin(input);
-
-            if (result == -1) {
-                Executor.runExternal(input);
-               
-            } 
+                if (result == -1) {
+                    Executor.runExternal(input);
+                   
+                } 
                 printPrompt();
-            
-            
+                
+                
+            }
         }
     }
 }
