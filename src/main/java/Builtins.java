@@ -21,6 +21,9 @@ if (input.startsWith("cd")) {
 
     if (parts.length == 2) {
         String path = parts[1];
+        if(path.equals("~")){
+            path = System.getenv("HOME");
+        }
         try {
             File target = path.startsWith("/") ?
                 new File(path).getCanonicalFile() :
