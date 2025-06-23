@@ -11,7 +11,7 @@ public class Main {
             String input = scanner.nextLine();
                    
             
-           if(Builtins.handleBuiltin(input)){
+           if(!Builtins.handleBuiltin(input)){
                Executor.runExternal(input);
 
             
