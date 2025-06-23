@@ -18,7 +18,7 @@ public class Builtins {
             String[] parts = input.split("\\s+");
             if(parts.length ==2){
                 String cmd = parts[1];
-                if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type")){
+                if(cmd.equals("echo")|| cmd.equals("exit")|| cmd.equals("type") || cmd.equals("pwd")){
                     System.out.println(cmd +" is a shell builtin");
                 } else {
                     String[] pathDirs = System.getenv("PATH").split(":");
