@@ -18,20 +18,19 @@ public class Builtins {
            String[] parts = input.split("\\s+");
            if(parts.length ==2){
             String path = parts[1];
-            File target = new File(path);
-
-            if(!target.isAbsolute()){
-                System.out.println("Only absolute paths are supported");
-                return true;
-            }
-            else if(target.exists() && target.isDirectory()){
+            try{
+            File target = new File(Main.currentDirectory,path).getCanonicalFile();
+            if(target.exists() && target.isDirectory()){
                 Main.currentDirectory = target;
             } else {
                 System.out.println("cd: no such file or directory: "+ path);
             }
-        } 
+        } catch(Exception e){
+            System.out.println("cd: error resolving path: "+path);
+        }
+    }
             else {
-                System.out.println("Usage: cd /absolute/path");
+                System.out.println("Usage: cd <path>");
             }
             return true;
            
