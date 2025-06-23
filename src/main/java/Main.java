@@ -23,10 +23,10 @@ public class Main {
 
             if (result == -1) {
                 Executor.runExternal(input);
-                printPrompt(); 
-            } else if (result == 0) {
+               
+            } 
                 printPrompt();
-            }
+            
             
         }
     }
