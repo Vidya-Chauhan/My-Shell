@@ -26,13 +26,16 @@ public class Builtins {
                     if (target.exists() && target.isDirectory()) {
                         Main.currentDirectory = target;
                     } else {
-                        System.out.println("cd: no such file or directory: " + path);
+                        System.out.print("cd: " + path + ": No such file or directory\n");
+System.out.flush();
                     }
                 } catch (Exception e) {
-                    System.out.println("cd: error resolving path: " + path);
+                   System.out.print("cd: " + path + ": Error resolving path\n");
+            System.out.flush();
                 }
             } else {
-                System.out.println("Usage: cd <path>");
+                System.out.println("Usage: cd <path>\n");
+                System.out.flush();
             }
             return true;
         }
