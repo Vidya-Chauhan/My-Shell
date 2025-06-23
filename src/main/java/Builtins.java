@@ -15,8 +15,7 @@ public class Builtins {
             System.out.println(Main.currentDirectory.getAbsolutePath());
             return 0;  
         }
-
-      if (input.startsWith("cd")) {
+if (input.startsWith("cd")) {
     String[] parts = input.split("\\s+");
 
     if (parts.length == 2) {
@@ -27,10 +26,10 @@ public class Builtins {
                 Main.currentDirectory = target;
             }
         } catch (Exception e) {
-            // Ignore any error
+            // ignore
         }
     }
-    return 0; // Always return success so prompt is printed
+    return 0;
 }
 
 
