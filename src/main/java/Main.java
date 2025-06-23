@@ -12,6 +12,7 @@ public class Main {
                    
             
            if(Builtins.handleBuiltin(input)){
+            
             continue;
            }
            Executor.runExternal(input);

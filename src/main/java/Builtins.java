@@ -24,6 +24,7 @@ public class Builtins {
                 Main.currentDirectory = target;
             } else {
                 System.out.println("cd: no such file or directory: "+ path);
+                System.out.flush();  
             }
         } catch(Exception e){
             System.out.println("cd: error resolving path: "+path);
