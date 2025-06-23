@@ -6,19 +6,26 @@ public class Main {
 
     public static void printPrompt() {
         System.out.print("$ ");
-        System.out.flush();  // ✅ Very important
+        System.out.flush();  // ✅ Force it out instantly
     }
 
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
+        printPrompt(); // ✅ Initial prompt before anything
+
         while (true) {
-            printPrompt();
             String input = scanner.nextLine();
 
-            if (!Builtins.handleBuiltin(input)) {
+            int result = Builtins.handleBuiltin(input);
+
+            if (result == -1) {
                 Executor.runExternal(input);
+                printPrompt(); // after external
+            } else if (result == 0) {
+                printPrompt(); // after builtin
             }
+            // if result == 1, prompt was already printed manually (e.g. after error)
         }
     }
 }
