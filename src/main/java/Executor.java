@@ -43,34 +43,41 @@ public class Executor {
             System.out.println("Error running command: " + e.getMessage());
         }
     }
+public static List<String> parseCommand(String input) {
+    List<String> parts = new ArrayList<>();
+    StringBuilder current = new StringBuilder();
+    boolean inSingleQuote = false;
+    boolean inDoubleQuote = false;
+    boolean escapeNextChar = false;
 
-    public static List<String> parseCommand(String input) {
-        List<String> parts = new ArrayList<>();
-        StringBuilder current = new StringBuilder();
-        boolean inSingleQuote = false;
-        boolean inDoubleQuote = false;
+    for (int i = 0; i < input.length(); i++) {
+        char c = input.charAt(i);
 
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-
-            if (c == '\'' && !inDoubleQuote) {
-                inSingleQuote = !inSingleQuote;
-            } else if (c == '\"' && !inSingleQuote) {
-                inDoubleQuote = !inDoubleQuote;
-            } else if (Character.isWhitespace(c) && !inSingleQuote && !inDoubleQuote) {
-                if (current.length() > 0) {
-                    parts.add(current.toString());
-                    current.setLength(0);
-                }
-            } else {
-                current.append(c);
+        if (escapeNextChar) {
+            current.append(c);
+            escapeNextChar = false;
+        } else if (c == '\\' && !inSingleQuote) {
+            // escape active, but not inside single quotes
+            escapeNextChar = true;
+        } else if (c == '\'' && !inDoubleQuote) {
+            inSingleQuote = !inSingleQuote;
+        } else if (c == '"' && !inSingleQuote) {
+            inDoubleQuote = !inDoubleQuote;
+        } else if (Character.isWhitespace(c) && !inSingleQuote && !inDoubleQuote) {
+            if (current.length() > 0) {
+                parts.add(current.toString());
+                current.setLength(0);
             }
+        } else {
+            current.append(c);
         }
-
-        if (current.length() > 0) {
-            parts.add(current.toString());
-        }
-
-        return parts;
     }
+
+    if (current.length() > 0) {
+        parts.add(current.toString());
+    }
+
+    return parts;
+}
+
 }
