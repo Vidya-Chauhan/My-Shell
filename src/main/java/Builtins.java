@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Builtins {
     public static int handleBuiltin(String input) throws IOException {
@@ -8,9 +9,15 @@ public class Builtins {
         }
 
         if (input.startsWith("echo")) {
-            System.out.println(input.substring(5));
-            return 0; 
-        }
+    List<String> args = Executor.parseCommand(input);
+    if (args.size() > 1) {
+        System.out.println(String.join(" ", args.subList(1, args.size())));
+    } else {
+        System.out.println();
+    }
+    return 0;
+}
+
 
         if (input.startsWith("pwd")) {
             System.out.println(Main.currentDirectory.getCanonicalPath());
