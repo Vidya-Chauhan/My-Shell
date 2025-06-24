@@ -54,7 +54,7 @@ public static List<String> parseCommand(String input) {
         char c = input.charAt(i);
 
         if (escapeNextChar) {
-            current.append(c);
+            current.append('\\').append(c);
             escapeNextChar = false;
         } else if (c == '\\' && !inSingleQuote) {
             // escape active, but not inside single quotes
