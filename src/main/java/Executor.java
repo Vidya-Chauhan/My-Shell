@@ -53,11 +53,19 @@ public static List<String> parseCommand(String input) {
     for (int i = 0; i < input.length(); i++) {
         char c = input.charAt(i);
 
+       
         if (escapeNextChar) {
-            if(inSingleQuote || inDoubleQuote){
-            current.append('\\').append(c);
+            if (inDoubleQuote) {
+                // Inside double quotes: only escape ", \ (and later $, `)
+                if (c == '"' || c == '\\') {
+                    current.append(c);
+                } else {
+                    current.append('\\').append(c); // preserve the backslash
+                }
+            } else if (!inSingleQuote) {
+                current.append(c); // unquoted: escape next char
             } else {
-                current.append(c);
+                current.append('\\').append(c); // inside single quote, backslash is literal
             }
             escapeNextChar = false;
         } else if (c == '\\' && !inSingleQuote) {
