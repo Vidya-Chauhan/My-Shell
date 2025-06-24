@@ -2,74 +2,75 @@ import java.io.File;
 import java.util.*;
 
 public class Executor {
+    public static void runExternal(String input) {
+        List<String> parts = parseCommand(input);
+        if (parts.size() == 0 || parts.get(0).isEmpty()) {
+            System.out.println(": command not found");
+            return;
+        }
+
+        String cmd = parts.get(0);
+        String fullPath = null;
+
+        for (String dir : System.getenv("PATH").split(":")) {
+            File file = new File(dir, cmd);
+            if (file.exists() && file.canExecute()) {
+                fullPath = file.getAbsolutePath();
+                break;
+            }
+        }
+
+        if (fullPath == null) {
+            System.out.println(cmd + ": command not found");
+            return;
+        }
+
+        try {
+            List<String> commandWithArgs = new ArrayList<>();
+            commandWithArgs.add(fullPath);
+            for (int i = 1; i < parts.size(); i++) {
+                commandWithArgs.add(parts.get(i));
+            }
+
+            ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
+            pb.command().set(0, cmd);
+            pb.directory(Main.currentDirectory);
+            pb.inheritIO();
+
+            pb.start().waitFor();
+
+        } catch (Exception e) {
+            System.out.println("Error running command: " + e.getMessage());
+        }
+    }
 
     public static List<String> parseCommand(String input) {
-    List<String> parts = new ArrayList<>();
-    StringBuilder current = new StringBuilder();
-    boolean inSingleQuote = false;
+        List<String> parts = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inSingleQuote = false;
+        boolean inDoubleQuote = false;
 
-    for (int i = 0; i < input.length(); i++) {
-        char c = input.charAt(i);
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
 
-        if (c == '\'') {
-            inSingleQuote = !inSingleQuote;  // Toggle quote mode
-        } else if (Character.isWhitespace(c) && !inSingleQuote) {
-            if (current.length() > 0) {
-                parts.add(current.toString());
-                current.setLength(0);
+            if (c == '\'' && !inDoubleQuote) {
+                inSingleQuote = !inSingleQuote;
+            } else if (c == '\"' && !inSingleQuote) {
+                inDoubleQuote = !inDoubleQuote;
+            } else if (Character.isWhitespace(c) && !inSingleQuote && !inDoubleQuote) {
+                if (current.length() > 0) {
+                    parts.add(current.toString());
+                    current.setLength(0);
+                }
+            } else {
+                current.append(c);
             }
-        } else {
-            current.append(c);
-        }
-    }
-
-    if (current.length() > 0) {
-        parts.add(current.toString());
-    }
-
-    return parts;
-}
-
-    public static void runExternal(String input) {
-    List<String> parts = parseCommand(input);
-    if (parts.size() == 0 || parts.get(0).isEmpty()) {
-        System.out.println(": command not found");
-        return;
-    }
-
-    String cmd = parts.get(0);
-    String fullPath = null;
-
-    for (String dir : System.getenv("PATH").split(":")) {
-        File file = new File(dir, cmd);
-        if (file.exists() && file.canExecute()) {
-            fullPath = file.getAbsolutePath();
-            break;
-        }
-    }
-
-    if (fullPath == null) {
-        System.out.println(cmd + ": command not found");
-        return;
-    }
-
-    try {
-        List<String> commandWithArgs = new ArrayList<>();
-        commandWithArgs.add(fullPath);
-        for (int i = 1; i < parts.size(); i++) {
-            commandWithArgs.add(parts.get(i));
         }
 
-        ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
-        pb.command().set(0, cmd);
-        pb.directory(Main.currentDirectory);
-        pb.inheritIO();
+        if (current.length() > 0) {
+            parts.add(current.toString());
+        }
 
-        pb.start().waitFor();
-
-    } catch (Exception e) {
-        System.out.println("Error running command: " + e.getMessage());
+        return parts;
     }
-}
-
 }
