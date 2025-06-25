@@ -20,15 +20,16 @@ public class Main {
                 String input = scanner.nextLine();
 
                 int result = Builtins.handleBuiltin(input);
+                boolean shouldPrintPrompt = true;
 
                 if (result == -1) {
                     Executor.runExternal(input);
                    
                 } 
-                printPrompt();
-                
-                
-            }
+               if (shouldPrintPrompt) {
+        printPrompt();
+    }
         }
+    }
     }
 }

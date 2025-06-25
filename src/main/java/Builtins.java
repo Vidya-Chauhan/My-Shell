@@ -9,12 +9,12 @@ public class Builtins {
         }
 
         if (input.startsWith("echo")) {
-    List<String> args = Executor.parseCommand(input);
-    if (args.size() > 1) {
-        System.out.println(String.join(" ", args.subList(1, args.size())));
-    } else {
-        System.out.println();
-    }
+    // List<String> args = Executor.parseCommand(input);
+    // if (args.size() > 1) {
+    //     System.out.println(String.join(" ", args.subList(1, args.size())));
+    // } else {
+    //     System.out.println();
+    // }
     return -1;
 }
 
