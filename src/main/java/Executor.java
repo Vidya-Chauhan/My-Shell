@@ -4,14 +4,33 @@ import java.util.*;
 public class Executor {
 public static void runExternal(String input) {
     // Step 1: Extract stderr redirection if present
+// Step 1: Handle stderr redirection (2>)
 String[] errorSplit = input.split("\\s*2>\\s*", 2);
 String inputWithoutStderr = errorSplit[0].trim();
 String errorFile = (errorSplit.length > 1) ? errorSplit[1].trim() : null;
 
-// Step 2: Extract stdout redirection (handles > and 1>)
-String[] outputSplit = inputWithoutStderr.split("(?<!\\d)\\s*>\\s*|\\s*1>\\s*", 2);
-String commandPart = outputSplit[0].trim();
-String outputFile = (outputSplit.length > 1) ? outputSplit[1].trim() : null;
+// Step 2: Handle stdout APPEND redirection (>> or 1>>)
+String outputFile = null;
+boolean appendOutput = false;
+
+String[] appendSplit = inputWithoutStderr.split("(?<!\\d)\\s*>>\\s*|\\s*1>>\\s*", 2);
+String commandPart;
+
+if (appendSplit.length > 1) {
+    commandPart = appendSplit[0].trim();
+    outputFile = appendSplit[1].trim();
+    appendOutput = true;
+} else {
+    // Step 3: Handle stdout OVERWRITE redirection (> or 1>)
+    String[] outputSplit = inputWithoutStderr.split("(?<!\\d)\\s*>\\s*|\\s*1>\\s*", 2);
+    if (outputSplit.length > 1) {
+        commandPart = outputSplit[0].trim();
+        outputFile = outputSplit[1].trim();
+    } else {
+        commandPart = inputWithoutStderr.trim();
+    }
+}
+
 
 
     List<String> parts = parseCommand(commandPart);
@@ -56,11 +75,18 @@ if (outputFile != null && !outputFile.isEmpty()) {
     if (parent != null && !parent.exists()) {
         parent.mkdirs();
     }
-    pb.redirectOutput(outFile);
+
+    if (appendOutput) {
+        pb.redirectOutput(ProcessBuilder.Redirect.appendTo(outFile)); // ✅ append mode
+    } else {
+        pb.redirectOutput(outFile); // ✅ overwrite mode
+    }
+
     isRedirecting = true;
 } else {
     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 }
+
 
 // Handle stderr redirection
 if (errorFile != null && !errorFile.isEmpty()) {
