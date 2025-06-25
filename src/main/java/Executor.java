@@ -3,9 +3,16 @@ import java.util.*;
 
 public class Executor {
 public static void runExternal(String input) {
-    String[] redirectionSplit = input.split("(?<!\\d)\\s*>\\s*|\\s*1>\\s*");  // handles > and 1>
-    String commandPart = redirectionSplit[0].trim();
-    String outputFile = (redirectionSplit.length > 1) ? redirectionSplit[1].trim() : null;
+    // Step 1: Extract stderr redirection if present
+String[] errorSplit = input.split("\\s*2>\\s*", 2);
+String inputWithoutStderr = errorSplit[0].trim();
+String errorFile = (errorSplit.length > 1) ? errorSplit[1].trim() : null;
+
+// Step 2: Extract stdout redirection (handles > and 1>)
+String[] outputSplit = inputWithoutStderr.split("(?<!\\d)\\s*>\\s*|\\s*1>\\s*", 2);
+String commandPart = outputSplit[0].trim();
+String outputFile = (outputSplit.length > 1) ? outputSplit[1].trim() : null;
+
 
     List<String> parts = parseCommand(commandPart);
     if (parts.size() == 0 || parts.get(0).isEmpty()) {
@@ -42,18 +49,31 @@ public static void runExternal(String input) {
 
         boolean isRedirecting = false;
 
-        if (outputFile != null && !outputFile.isEmpty()) {
-            File outFile = new File(outputFile);
-            File parent = outFile.getParentFile();
-            if (parent != null && !parent.exists()) {
-                parent.mkdirs();
-            }
-            pb.redirectOutput(outFile);
-            isRedirecting = true;
-            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-        } else {
-            pb.inheritIO(); // attach to console only if not redirecting
-        }
+        // Handle stdout redirection
+if (outputFile != null && !outputFile.isEmpty()) {
+    File outFile = new File(outputFile);
+    File parent = outFile.getParentFile();
+    if (parent != null && !parent.exists()) {
+        parent.mkdirs();
+    }
+    pb.redirectOutput(outFile);
+    isRedirecting = true;
+} else {
+    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+}
+
+// Handle stderr redirection
+if (errorFile != null && !errorFile.isEmpty()) {
+    File errFile = new File(errorFile);
+    File parent = errFile.getParentFile();
+    if (parent != null && !parent.exists()) {
+        parent.mkdirs();
+    }
+    pb.redirectError(errFile);
+} else {
+    pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+}
+
 
         Process process = pb.start();
         process.waitFor();
