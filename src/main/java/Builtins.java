@@ -15,7 +15,7 @@ public class Builtins {
     } else {
         System.out.println();
     }
-    return 0;
+    return -1;
 }
 
 
