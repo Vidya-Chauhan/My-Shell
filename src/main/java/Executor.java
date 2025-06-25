@@ -3,6 +3,10 @@ import java.util.*;
 
 public class Executor {
     public static void runExternal(String input) {
+        String[] redirectionSplit = input.split("(?<!\\d)\\s*>\\s*|\\s*1>\\s*");  // handles both > and 1>
+    String commandPart = redirectionSplit[0].trim();
+    String outputFile = (redirectionSplit.length > 1) ? redirectionSplit[1].trim() : null; 
+
         List<String> parts = parseCommand(input);
         if (parts.size() == 0 || parts.get(0).isEmpty()) {
             System.out.println(": command not found");
@@ -35,8 +39,13 @@ public class Executor {
             ProcessBuilder pb = new ProcessBuilder(commandWithArgs);
             pb.command().set(0, cmd);
             pb.directory(Main.currentDirectory);
-            pb.inheritIO();
-
+           
+            if (outputFile != null && !outputFile.isEmpty()) {
+            File outFile = new File(outputFile);
+            pb.redirectOutput(outFile); 
+        } else {
+            pb.inheritIO(); 
+        }
             pb.start().waitFor();
 
         } catch (Exception e) {
