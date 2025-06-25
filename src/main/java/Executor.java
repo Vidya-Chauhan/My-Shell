@@ -7,7 +7,7 @@ public class Executor {
     String commandPart = redirectionSplit[0].trim();
     String outputFile = (redirectionSplit.length > 1) ? redirectionSplit[1].trim() : null; 
 
-        List<String> parts = parseCommand(input);
+        List<String> parts = parseCommand(commandPart);
         if (parts.size() == 0 || parts.get(0).isEmpty()) {
             System.out.println(": command not found");
             return;
