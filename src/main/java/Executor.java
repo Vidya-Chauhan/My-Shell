@@ -50,6 +50,7 @@ public static void runExternal(String input) {
             }
             pb.redirectOutput(outFile);
             isRedirecting = true;
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
         } else {
             pb.inheritIO(); // attach to console only if not redirecting
         }
