@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class Builtins {
     public static int handleBuiltin(String input) throws IOException {
@@ -9,48 +8,48 @@ public class Builtins {
         }
 
         if (input.startsWith("echo")) {
-    // List<String> args = Executor.parseCommand(input);
-    // if (args.size() > 1) {
-    //     System.out.println(String.join(" ", args.subList(1, args.size())));
-    // } else {
-    //     System.out.println();
-    // }
-    return -1;
-}
-
+            String[] parts = input.split("\\s+", 2);
+            if (parts.length > 1) {
+                System.out.println(parts[1]);
+            } else {
+                System.out.println();
+            }
+            return 0;
+        }
 
         if (input.startsWith("pwd")) {
             System.out.println(Main.currentDirectory.getCanonicalPath());
             return 0;  
         }
-if (input.startsWith("cd")) {
-    String[] parts = input.split("\\s+");
 
-    if (parts.length == 2) {
-        String path = parts[1];
-        if(path.equals("~")){
-            path = System.getenv("HOME");
-        }
-        try {
-            File target = path.startsWith("/") ?
-                new File(path).getCanonicalFile() :
-                new File(Main.currentDirectory, path).getCanonicalFile();
+        if (input.startsWith("cd")) {
+            String[] parts = input.split("\\s+");
+            if (parts.length == 2) {
+                String path = parts[1];
+                if (path.equals("~")) {
+                    path = System.getenv("HOME");
+                }
+                try {
+                    File target = path.startsWith("/") ?
+                        new File(path).getCanonicalFile() :
+                        new File(Main.currentDirectory, path).getCanonicalFile();
 
-            if (target.exists() && target.isDirectory()) {
-                Main.currentDirectory = target;
+                    if (target.exists() && target.isDirectory()) {
+                        Main.currentDirectory = target;
+                    } else {
+                        System.out.println("cd: " + path + ": No such file or directory");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("cd: " + path + ": No such file or directory");
+                }
             } else {
-                System.out.println("cd: " + path + ": No such file or directory");
+                System.out.println("Usage: cd <path>");
             }
-
-        } catch (Exception e) {
-            System.out.println("cd: " + path + ": No such file or directory");
+            return 0;
         }
-    } else {
-        System.out.println("Usage: cd <path>");
-    }
-    return 0;
-}
-         if (input.startsWith("type")) {
+
+        if (input.startsWith("type")) {
             String[] parts = input.split("\\s+");
             if (parts.length == 2) {
                 String cmd = parts[1];

@@ -25,14 +25,15 @@ public class Main {
                 .build();
 
         DefaultParser parser = new DefaultParser();
-        parser.setEscapeChars(new char[0]);  // ⬅️ Super important to prevent triple-space bug
+        parser.setEscapeChars(new char[0]);
 
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("echo", "exit"))  // ⬅️ Your builtins
+                .completer(new StringsCompleter("echo", "exit"))
                 .parser(parser)
                 .option(LineReader.Option.HISTORY_VERIFY, false)
                 .option(LineReader.Option.HISTORY_BEEP, false)
+                .option(LineReader.Option.INSERT_TAB, false) // ✅ Fix tab-autocomplete whitespace bug
                 .build();
 
         while (true) {
