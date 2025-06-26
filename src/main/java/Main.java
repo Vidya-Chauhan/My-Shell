@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Terminal terminal = TerminalBuilder.builder()
             .system(true)
+            .dumb(true)
             .build();
 
         // Autocomplete for built-in commands
