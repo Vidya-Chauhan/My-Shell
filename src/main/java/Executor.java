@@ -3,11 +3,25 @@ import java.util.*;
 
 public class Executor {
 public static void runExternal(String input) {
-    // Step 1: Extract stderr redirection if present
-// Step 1: Handle stderr redirection (2>)
-String[] errorSplit = input.split("\\s*2>\\s*", 2);
-String inputWithoutStderr = errorSplit[0].trim();
-String errorFile = (errorSplit.length > 1) ? errorSplit[1].trim() : null;
+
+    String errorFile = null;
+    boolean appendError = false;
+    String inputWithoutStderr;
+String[] errAppendSplit = input.split("\\s*2>>\\s*", 2);
+if(errAppendSplit.length >1){
+    appendError = true;
+    errorFile = errAppendSplit[1].trim();
+    inputWithoutStderr = errAppendSplit[0].trim();
+} else {
+     String[] errSplit = input.split("\\s*2>\\s*", 2);
+    if (errSplit.length > 1) {
+        errorFile = errSplit[1].trim();
+        inputWithoutStderr = errSplit[0].trim();
+    } else {
+        inputWithoutStderr = input.trim();
+    }
+}
+
 
 // Step 2: Handle stdout APPEND redirection (>> or 1>>)
 String outputFile = null;
@@ -95,6 +109,10 @@ if (errorFile != null && !errorFile.isEmpty()) {
     if (parent != null && !parent.exists()) {
         parent.mkdirs();
     }
+    if(appendError){
+    pb.redirectError(ProcessBuilder.Redirect.appendTo(errFile));
+    }
+   else {
     pb.redirectError(errFile);
 } else {
     pb.redirectError(ProcessBuilder.Redirect.INHERIT);
