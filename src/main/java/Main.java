@@ -1,35 +1,36 @@
 import java.io.File;
-import java.util.Scanner;
+import org.jline.reader.*;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 public class Main {
     public static File currentDirectory = new File(System.getProperty("user.dir"));
 
-    public static void printPrompt() {
-        System.out.print("$ ");
-        System.out.flush();
-      
-    }
-
     public static void main(String[] args) throws Exception {
-       
+        Terminal terminal = TerminalBuilder.builder()
+            .system(true)
+            .build();
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            printPrompt(); 
+        // Autocomplete for built-in commands
+        LineReader reader = LineReaderBuilder.builder()
+            .terminal(terminal)
+            .completer(new StringsCompleter("echo", "exit"))
+            .build();
 
-            while (true) {
-                String input = scanner.nextLine();
+        while (true) {
+            String input;
+            try {
+                input = reader.readLine("$ ");
+            } catch (UserInterruptException | EndOfFileException e) {
+                break; // Exit on Ctrl+C or Ctrl+D
+            }
 
-                int result = Builtins.handleBuiltin(input);
-                boolean shouldPrintPrompt = true;
+            int result = Builtins.handleBuiltin(input);
 
-                if (result == -1) {
-                    Executor.runExternal(input);
-                   
-                } 
-               if (shouldPrintPrompt) {
-        printPrompt();
-    }
+            if (result == -1) {
+                Executor.runExternal(input);
+            }
         }
-    }
     }
 }
