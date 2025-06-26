@@ -2,9 +2,6 @@ import java.io.File;
 import org.jline.reader.*;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.reader.impl.completer.AggregateCompleter;
-import org.jline.reader.impl.completer.ArgumentCompleter;
-import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -14,6 +11,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         System.setProperty("org.jline.utils.Log.level", "OFF");
 
+        // Silence error logs
         System.setErr(new java.io.PrintStream(new java.io.OutputStream() {
             public void write(int b) {}
         }));
@@ -27,18 +25,15 @@ public class Main {
         parser.setEscapeChars(new char[0]);
         parser.setEofOnEscapedNewLine(true);
 
-        // ✅ ArgumentCompleter ensures full-word replacement
-        Completer completer = new ArgumentCompleter(
-            new StringsCompleter("echo", "exit"),
-            NullCompleter.INSTANCE
-        );
-
         LineReader reader = LineReaderBuilder.builder()
             .terminal(terminal)
-            .completer(completer)
+            .completer(new StringsCompleter("echo", "exit"))
             .parser(parser)
             .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
             .build();
+
+        // ✅ THIS is the secret: force completion to replace word
+        reader.unsetOpt(LineReader.Option.INSERT_TAB);
 
         while (true) {
             String input;
