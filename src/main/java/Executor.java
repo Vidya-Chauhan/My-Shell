@@ -114,8 +114,10 @@ if (errorFile != null && !errorFile.isEmpty()) {
     }
    else {
     pb.redirectError(errFile);
+} 
 } else {
     pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
 }
 
 
