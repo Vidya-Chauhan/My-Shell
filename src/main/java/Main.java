@@ -27,7 +27,8 @@ public class Main {
             .terminal(terminal)
             .completer(new StringsCompleter("echo", "exit"))
             .parser(parser)
-            .option(LineReader.Option.AUTO_PARAM, true)  // ✅ auto insert match
+            .option(LineReader.Option.COMPLETE_IN_WORD, false)
+
             .build();
 
         while (true) {
