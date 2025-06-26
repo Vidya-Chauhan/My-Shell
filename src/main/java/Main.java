@@ -27,9 +27,8 @@ public class Main {
         parser.setEofOnEscapedNewLine(true);
 
         // ✅ ArgumentCompleter will REPLACE word on <TAB>
-        Completer completer = new ArgumentCompleter(
-            new StringsCompleter("echo", "exit")
-        );
+         StringsCompleter completer = new StringsCompleter("echo", "exit");
+
 
         LineReader reader = LineReaderBuilder.builder()
             .terminal(terminal)
