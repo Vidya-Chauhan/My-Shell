@@ -1,39 +1,41 @@
-import java.io.File;
 import org.jline.reader.*;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Main {
     public static File currentDirectory = new File(System.getProperty("user.dir"));
 
-    public static void main(String[] args) throws Exception {
-        // Disable jline logging and system error stream
-        System.setProperty("org.jline.utils.Log.level", "OFF");
+    public static void main(String[] args) throws IOException {
+        // Disable JLine logging
+        Logger jlineLogger = Logger.getLogger("org.jline");
+        jlineLogger.setLevel(Level.OFF);
+        for (Handler handler : jlineLogger.getHandlers()) {
+            handler.setLevel(Level.OFF);
+        }
 
-        System.setErr(new java.io.PrintStream(new java.io.OutputStream() {
-            public void write(int b) {}
-        }));
-
-        // Build terminal
         Terminal terminal = TerminalBuilder.builder()
-            .dumb(true)
-            .streams(System.in, System.out)
-            .build();
+                .system(true)
+                .build();
 
-        // ✅ Custom parser with no escape characters
         DefaultParser parser = new DefaultParser();
         parser.setEscapeChars(new char[0]);
 
-        // ✅ Use StringsCompleter with "echo" and "exit"
         LineReader reader = LineReaderBuilder.builder()
-            .terminal(terminal)
-            .parser(parser)
-            .completer(new StringsCompleter("echo", "exit"))
-            .build();
+                .terminal(terminal)
+                .parser(parser)
+                .completer(new StringsCompleter("echo", "exit")) // Only built-in completions
+                .option(LineReader.Option.HISTORY_VERIFY, false)
+                .option(LineReader.Option.HISTORY_BEEP, false)
+                .build();
 
-        // Shell loop
         while (true) {
             String input;
             try {
