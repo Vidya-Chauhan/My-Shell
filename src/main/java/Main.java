@@ -8,12 +8,10 @@ public class Main {
     public static File currentDirectory = new File(System.getProperty("user.dir"));
 
     public static void main(String[] args) throws Exception {
-        Terminal terminal = TerminalBuilder.builder()
-    .jna(false)  // 🔴 disable native loading
-    .jansi(false) // 🔴 disable ANSI native
-    .dumb(true)   // ✅ fallback to basic terminal
-    .system(true)
-    .build();
+         Terminal terminal = TerminalBuilder.builder()
+            .dumb(true)          // Pure Java mode
+            .streams(System.in, System.out)  // Force standard IO
+            .build();
 
 
         // Autocomplete for built-in commands
