@@ -9,9 +9,12 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Terminal terminal = TerminalBuilder.builder()
-            .system(true)
-            .dumb(true)
-            .build();
+    .jna(false)  // 🔴 disable native loading
+    .jansi(false) // 🔴 disable ANSI native
+    .dumb(true)   // ✅ fallback to basic terminal
+    .system(true)
+    .build();
+
 
         // Autocomplete for built-in commands
         LineReader reader = LineReaderBuilder.builder()
