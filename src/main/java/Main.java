@@ -22,13 +22,13 @@ public class Main {
 
         DefaultParser parser = new DefaultParser();
         parser.setEscapeChars(new char[0]);
+        parser.setEofOnEscapedNewLine(true);
 
         LineReader reader = LineReaderBuilder.builder()
             .terminal(terminal)
             .completer(new StringsCompleter("echo", "exit"))
             .parser(parser)
-            .option(LineReader.Option.COMPLETE_IN_WORD, false)
-
+            .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
             .build();
 
         while (true) {
