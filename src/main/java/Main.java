@@ -20,15 +20,14 @@ public class Main {
             .streams(System.in, System.out)
             .build();
 
-        // ✅ Create parser and configure escape chars
         DefaultParser parser = new DefaultParser();
         parser.setEscapeChars(new char[0]);
 
-        // ✅ Use parser in line reader
         LineReader reader = LineReaderBuilder.builder()
             .terminal(terminal)
             .completer(new StringsCompleter("echo", "exit"))
             .parser(parser)
+            .option(LineReader.Option.AUTO_PARAM, true)  // ✅ auto insert match
             .build();
 
         while (true) {
