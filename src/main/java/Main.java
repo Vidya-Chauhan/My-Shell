@@ -1,49 +1,36 @@
-import org.jline.reader.*;
-import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.StringsCompleter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
 import java.io.File;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static File currentDirectory = new File(System.getProperty("user.dir"));
 
-    public static void main(String[] args) throws Exception {
-        // Disable JLine logs
-        Logger jlineLogger = Logger.getLogger("org.jline");
-        jlineLogger.setLevel(Level.OFF);
-        for (Handler handler : jlineLogger.getHandlers()) {
-            handler.setLevel(Level.OFF);
-        }
+    public static void main(String[] args) throws IOException {
+        List<String> builtins = Arrays.asList("echo", "exit", "type", "pwd", "cd");
 
-        Terminal terminal = TerminalBuilder.builder()
-                .system(true)
-                .build();
-
-        DefaultParser parser = new DefaultParser();
-        parser.setEscapeChars(new char[0]);
-
-        StringsCompleter completer = new StringsCompleter("echo", "exit","type");
-
-        LineReader reader = LineReaderBuilder.builder()
-                .terminal(terminal)
-                .parser(parser)
-                .completer(completer)
-                .build(); // ❗ DO NOT use INSERT_TAB option
+        TabCompletion tabCompletion = new TabCompletion(builtins);
 
         while (true) {
+            System.out.print("$ ");
             String input;
             try {
-                input = reader.readLine("$ ");
-            } catch (UserInterruptException | EndOfFileException e) {
+                input = tabCompletion.readLine();
+            } catch (IOException e) {
+                System.err.println("Error reading input: " + e.getMessage());
                 break;
             }
 
-            int result = Builtins.handleBuiltin(input);
+            if (input.trim().isEmpty()) continue;
+
+            int result;
+            try {
+                result = Builtins.handleBuiltin(input);
+            } catch (Exception e) {
+                System.err.println("Error executing builtin: " + e.getMessage());
+                continue;
+            }
+
             if (result == -1) {
                 Executor.runExternal(input);
             }
