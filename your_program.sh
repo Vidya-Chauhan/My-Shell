@@ -25,9 +25,12 @@
 
 
 #!/bin/sh
+set -e
 
-# Compile Java files
-javac -d out -cp "lib/*" src/main/java/*.java
+# Compile Java files from src/main/java to out
+mkdir -p out
+javac -d out src/main/java/*.java
 
-# Run Main class
-java -cp "out:lib/*" Main
+# Run the compiled program (no jar involved!)
+java -cp out Main
+
