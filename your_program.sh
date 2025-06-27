@@ -26,14 +26,15 @@
 
 #!/bin/sh
 
-# Step 1: Compile Java source files into /tmp/codecrafters-build-shell-java/out
+set -e
+
+# Compile Java source files to /tmp
 mkdir -p /tmp/codecrafters-build-shell-java/out
 
-javac -d /tmp/codecrafters-build-shell-java/out -cp lib/* \
-  src/main/java/*.java
+javac -d /tmp/codecrafters-build-shell-java/out -cp lib/* src/main/java/*.java
 
-# Step 2: Package into a jar at the correct location
+# Create the jar file in the expected location
 jar cfe /tmp/codecrafters-build-shell-java/codecrafters-shell.jar Main -C /tmp/codecrafters-build-shell-java/out .
 
-# Step 3: Run the jar
+# Run the jar
 exec java -cp /tmp/codecrafters-build-shell-java/codecrafters-shell.jar:lib/* Main
