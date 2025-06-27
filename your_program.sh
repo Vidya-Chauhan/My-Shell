@@ -26,15 +26,8 @@
 
 #!/bin/sh
 
-set -e
+# Compile Java files
+javac -d out -cp "lib/*" src/main/java/*.java
 
-# Compile Java source files to /tmp
-mkdir -p /tmp/codecrafters-build-shell-java/out
-
-javac -d /tmp/codecrafters-build-shell-java/out -cp lib/* src/main/java/*.java
-
-# Create the jar file in the expected location
-jar cfe /tmp/codecrafters-build-shell-java/codecrafters-shell.jar Main -C /tmp/codecrafters-build-shell-java/out .
-
-# Run the jar
-exec java -cp /tmp/codecrafters-build-shell-java/codecrafters-shell.jar:lib/* Main
+# Run Main class
+java -cp "out:lib/*" Main
