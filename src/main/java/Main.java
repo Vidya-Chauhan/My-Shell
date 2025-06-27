@@ -27,14 +27,13 @@ public class Main {
         DefaultParser parser = new DefaultParser();
         parser.setEscapeChars(new char[0]);
 
+        StringsCompleter completer = new StringsCompleter("echo", "exit");
+
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("echo", "exit"))
                 .parser(parser)
-                .option(LineReader.Option.HISTORY_VERIFY, false)
-                .option(LineReader.Option.HISTORY_BEEP, false)
-                .option(LineReader.Option.INSERT_TAB, false) // ✅ Fix tab-autocomplete whitespace bug
-                .build();
+                .completer(completer)
+                .build(); // ❗ DO NOT use INSERT_TAB option
 
         while (true) {
             String input;
@@ -51,4 +50,3 @@ public class Main {
         }
     }
 }
-
