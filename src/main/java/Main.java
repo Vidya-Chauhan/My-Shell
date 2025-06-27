@@ -27,7 +27,7 @@ public class Main {
         DefaultParser parser = new DefaultParser();
         parser.setEscapeChars(new char[0]);
 
-        StringsCompleter completer = new StringsCompleter("echo", "exit");
+        StringsCompleter completer = new StringsCompleter("echo", "exit","type");
 
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
