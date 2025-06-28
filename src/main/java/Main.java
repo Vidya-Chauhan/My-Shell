@@ -7,7 +7,7 @@ public class Main {
     public static File currentDirectory = new File(System.getProperty("user.dir"));
 
     public static void main(String[] args) throws IOException {
-        List<String> builtins = Arrays.asList("echo", "exit", "type", "pwd", "cd");
+        List<String> builtins = Arrays.asList("echo", "exit");
 
         TabCompletion tabCompletion = new TabCompletion(builtins);
 
@@ -21,18 +21,12 @@ public class Main {
                 break;
             }
 
-            if (input.trim().isEmpty()) continue;
+            if (input == null || input.trim().isEmpty()) continue;
 
-            int result;
-            try {
-                result = Builtins.handleBuiltin(input);
-            } catch (Exception e) {
-                System.err.println("Error executing builtin: " + e.getMessage());
-                continue;
-            }
-
-            if (result == -1) {
-                Executor.runExternal(input);
+            if (input.startsWith("echo ")) {
+                System.out.println(input.substring(5));
+            } else if (input.equals("exit") || input.equals("exit 0")) {
+                System.exit(0);
             }
         }
     }

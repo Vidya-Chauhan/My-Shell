@@ -14,20 +14,16 @@ public class TabCompletion {
         }
     }
 
-    public String readLine() throws IOException {
+    String readLine() throws IOException {
         StringBuilder input = new StringBuilder();
 
         while (true) {
             int key = System.in.read();
 
-            // Enter key
-            if (key == 10) {
+            if (key == 10) { // Enter
                 System.out.println();
                 return input.toString();
-            }
-
-            // Tab key
-            else if (key == 9) {
+            } else if (key == 9) { // TAB
                 String completion = findCompletion(input.toString());
                 if (completion != null) {
                     clearCurrentLine(input.length());
@@ -35,20 +31,14 @@ public class TabCompletion {
                     input.append(" ");
                     System.out.print(completion + " ");
                 } else {
-                    System.out.print("\u0007"); // bell
+                    System.out.print("\u0007");
                 }
-            }
-
-            // Backspace
-            else if (key == 127 || key == 8) {
+            } else if (key == 127 || key == 8) { // Backspace
                 if (input.length() > 0) {
                     input.deleteCharAt(input.length() - 1);
                     System.out.print("\b \b");
                 }
-            }
-
-            // Printable ASCII
-            else if (key >= 32 && key <= 126) {
+            } else if (key >= 32 && key <= 126) { // Printable characters
                 input.append((char) key);
                 System.out.print((char) key);
             }
@@ -57,9 +47,9 @@ public class TabCompletion {
 
     private String findCompletion(String prefix) {
         return strings.stream()
-            .filter(word -> word.startsWith(prefix))
-            .findFirst()
-            .orElse(null);
+                .filter(word -> word.startsWith(prefix))
+                .findFirst()
+                .orElse(null);
     }
 
     private void clearCurrentLine(int length) {
@@ -70,10 +60,7 @@ public class TabCompletion {
 
     private void initializeTerminal() throws IOException, InterruptedException {
         originalTerminalSettings = stty("--save");
-
-        stty("-echo");
-        stty("-icanon");
-
+        stty("-echo -icanon");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 stty(originalTerminalSettings);
@@ -102,6 +89,5 @@ public class TabCompletion {
 
     private void handleError(String message, Exception e) {
         System.err.println(message + e.getMessage());
-        e.printStackTrace();
     }
 }
