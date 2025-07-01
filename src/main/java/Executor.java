@@ -47,6 +47,7 @@ if (appendSplit.length > 1) {
 
 
 
+
     List<String> parts = parseCommand(commandPart);
     if (parts.size() == 0 || parts.get(0).isEmpty()) {
         System.out.println(": command not found");
